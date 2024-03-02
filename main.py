@@ -27,28 +27,24 @@ def sklearn_encoder(features: pd.DataFrame):
     
 # factor this out
 def preprocessing(df: pd.DataFrame) -> pd.DataFrame:
-    pass
-
+    df = df.dropna() # remove all rows with garbage
+    assert(len(df.columns[df.isnull().any()].tolist()) == 0) # assert no more na values
+    target = df['income'] # Y value
+    # whoever included target column values with a period in them
+    # needs to be in prison
+    target = target.replace(r'\.$', value="", regex=True)
+    features = df[df.columns.difference(['income'])] # X values
+    # probably have to fix this encoding system
+    dummified = pd.get_dummies(features)
+    # print(dummified.columns)
+    return (dummified, target)
 
 # fetch dataset 
 adult = fetch_ucirepo(id=2) 
-  
+
 df = pd.DataFrame(adult.data.original)
 
-df = df.dropna() # remove all rows with garbage
-# TODO: remove all rows that are encoded with a '?'
-assert(len(df.columns[df.isnull().any()].tolist()) == 0) # assert no more na values
-# print(df.dtypes) # inspect
-
-target = df['income'] # Y value
-# whoever included target column values with a period in them
-# needs to be in prison
-target = target.replace(r'\.$', value="", regex=True)
-# print(target.unique())
-features = df[df.columns.difference(['income'])] # X values
-# probably have to fix this encoding system
-dummified = pd.get_dummies(features)
-# print(dummified.columns)
+dummified, target = preprocessing(df)
 
 # tts for later
 X_train, X_test, y_train, y_test = train_test_split(dummified, target, test_size=0.33, random_state=42)
@@ -65,6 +61,7 @@ accuracy = accuracy_score(y_test, y_hat)
 print(accuracy)
 
 # gnb model
+# this should probably be categorical NB
 gnb = GaussianNB()
 gnb.fit(X_train, y_train)
 gnb_hat = gnb.predict(X_test)
@@ -72,3 +69,4 @@ accuracy = accuracy_score(y_test, gnb_hat)
 print(accuracy)
 
 # time for step 2
+print(df.head())

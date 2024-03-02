@@ -39,6 +39,29 @@ def preprocessing(df: pd.DataFrame) -> pd.DataFrame:
     # print(dummified.columns)
     return (dummified, target)
 
+def decision_tree(X_train, X_test, y_train, y_test):
+    # decision tree
+    decision_tree = DecisionTreeClassifier(random_state=42)
+    decision_tree.fit(X_train, y_train)
+    # this stinks, probably needs tweaking
+    tree_rules = export_text(decision_tree, feature_names=list(dummified.columns))
+    # print(tree_rules)
+    # predicted y
+    y_hat = decision_tree.predict(X_test)
+    accuracy = accuracy_score(y_test, y_hat)
+    return accuracy
+
+def naive_bayes(X_train, X_test, y_train, y_test):
+    # gnb model
+    # this should probably be categorical NB
+    gnb = GaussianNB()
+    gnb.fit(X_train, y_train)
+    gnb_hat = gnb.predict(X_test)
+    accuracy = accuracy_score(y_test, gnb_hat)
+    # print(accuracy)
+    return accuracy
+
+
 # fetch dataset 
 adult = fetch_ucirepo(id=2) 
 
@@ -48,25 +71,9 @@ dummified, target = preprocessing(df)
 
 # tts for later
 X_train, X_test, y_train, y_test = train_test_split(dummified, target, test_size=0.33, random_state=42)
-# decision tree
-decision_tree = DecisionTreeClassifier(random_state=42)
-decision_tree.fit(X_train, y_train)
-# this stinks, probably needs tweaking
-tree_rules = export_text(decision_tree, feature_names=list(dummified.columns))
-# print(tree_rules)
 
-# predicted y
-y_hat = decision_tree.predict(X_test)
-accuracy = accuracy_score(y_test, y_hat)
-print(accuracy)
-
-# gnb model
-# this should probably be categorical NB
-gnb = GaussianNB()
-gnb.fit(X_train, y_train)
-gnb_hat = gnb.predict(X_test)
-accuracy = accuracy_score(y_test, gnb_hat)
-print(accuracy)
+# dt_acc = decision_tree(X_train, X_test, y_train, y_test)
+# nb_acc = naive_bayes(X_train, X_test, y_train, y_test)
 
 # time for step 2
-print(df.head())
+# remove all the '?'

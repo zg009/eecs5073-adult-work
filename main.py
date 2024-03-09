@@ -178,7 +178,7 @@ print("Performing gaussian naive bayes classifer:")
 statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
 
 print("Performing categorical naive bayes classifer:")
-statistics = naive_bayes(CategoricalNB(), X_train, X_test, y_train, y_test)
+statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
 
 print("Performing multinomial naive bayes classifer:")
 statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)

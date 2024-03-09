@@ -5,6 +5,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score
 from sklearn.naive_bayes import GaussianNB, CategoricalNB, BernoulliNB, ComplementNB, MultinomialNB
+from sklearn import svm
 import numpy as np
 
 # Encodes catergory classes with One Hot Encoder
@@ -129,9 +130,8 @@ def all_kmeans(X_train):
     kmeans = k_means(10, X_train, algorithm="elkan")
     print(kmeans.cluster_centers_)
 
-def svm_classifier(X_train, X_test, y_train, y_test):
-    from sklearn import svm
-    svm = svm.SVC()
+def svm_classifier(model, X_train, X_test, y_train, y_test):
+    svm = model
     svm.fit(X_train, y_train)
     y_hat = svm.predict(X_test)
     statistics = calc_performance(y_test, y_hat)
@@ -174,24 +174,34 @@ X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=
 # statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 
 # Naive Bayes
-print("Performing gaussian naive bayes classifer:")
-statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+# print("Performing gaussian naive bayes classifer:")
+# statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
 
-# probably the same because k is 2 ~> Categorical reduces to bernoulli...
-print("Performing bernoulli naive bayes classifer:")
-statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
+# # probably the same because k is 2 ~> Categorical reduces to bernoulli...
+# print("Performing bernoulli naive bayes classifer:")
+# statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 
-print("Performing categorical naive bayes classifer:")
-statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
+# print("Performing categorical naive bayes classifer:")
+# statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
 
-print("Performing multinomial naive bayes classifer:")
-statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
+# print("Performing multinomial naive bayes classifer:")
+# statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
 
-print("Performing complement naive bayes classifer:")
-statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
+# print("Performing complement naive bayes classifer:")
+# statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
 
+# SVM
+print("Performing SVM SVC classifier:")
+statistics = svm_classifier(svm.SVC(), X_train, X_test, y_train, y_test)
 
+print("Performing SVM SVR classifier:")
+statistics = svm_classifier(svm.SVR(), X_train, X_test, y_train, y_test)
 
+print("Performing SVM Nu-SVC classifier:")
+statistics = svm_classifier(svm.NuSVC(), X_train, X_test, y_train, y_test)
+
+print("Performing SVM Nu-SVR classifier:")
+statistics = svm_classifier(svm.NuSVR(), X_train, X_test, y_train, y_test)
 # Kmeans
 # print("Performing Kmeans classifer:")
 # all_kmeans(X_train)

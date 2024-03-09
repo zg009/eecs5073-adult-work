@@ -83,7 +83,7 @@ def calc_performance(y_test, y_hat):
 
 # Tree classifier. Returns accuracy, TP rate, FP rate, precision, recall, and F1
 def decision_tree(X_train, X_test, y_train, y_test, dummified):
-    decision_tree = DecisionTreeClassifier(random_state=42)
+    decision_tree = DecisionTreeClassifier()
     decision_tree.fit(X_train, y_train)
     # this stinks, probably needs tweaking
     tree_rules = export_text(decision_tree, feature_names=list(dummified.columns))
@@ -110,7 +110,7 @@ def naive_bayes(model, X_train, X_test, y_train, y_test):
 
 from sklearn.cluster import KMeans
 def k_means(clusters, X_train, algorithm="lloyd") -> KMeans:
-    kmeans = KMeans(n_clusters=clusters, random_state=42, algorithm=algorithm)
+    kmeans = KMeans(n_clusters=clusters, algorithm=algorithm)
     kmeans.fit(X_train)
     return kmeans
 
@@ -141,7 +141,7 @@ def svm_classifier(X_train, X_test, y_train, y_test):
 def mlp(X_train, X_test, y_train, y_test):
     from sklearn.neural_network import MLPClassifier
     # iterations dont matter here, leaving it at 400 and fuck off
-    mlp = MLPClassifier(random_state=42, max_iter=400)
+    mlp = MLPClassifier(max_iter=400)
     mlp.fit(X_train, y_train)
     y_hat = mlp.predict(X_test)
     statistics = calc_performance(y_test, y_hat)
@@ -167,7 +167,7 @@ features, target = preprocessing(df)
 # print("Target:\n", target)
 
 #Split training and test data
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.5)
 
 # Decision Tree
 # print("Performing decision tree classifer:")
@@ -176,6 +176,9 @@ X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=
 # Naive Bayes
 print("Performing gaussian naive bayes classifer:")
 statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+
+print("Performing bernoulli naive bayes classifer:")
+statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 
 print("Performing categorical naive bayes classifer:")
 statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
@@ -186,8 +189,7 @@ statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
 print("Performing complement naive bayes classifer:")
 statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
 
-print("Performing bernoulli naive bayes classifer:")
-statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
+
 
 # Kmeans
 # print("Performing Kmeans classifer:")

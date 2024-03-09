@@ -3,8 +3,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, export_text
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score, r2_score
 from sklearn.naive_bayes import GaussianNB, CategoricalNB, BernoulliNB, ComplementNB, MultinomialNB
+from sklearn import svm
 import numpy as np
 
 # Encodes catergory classes with One Hot Encoder
@@ -101,10 +102,8 @@ def naive_bayes(model, X_train, X_test, y_train, y_test):
     gnb = model
     gnb.fit(X_train, y_train)
     gnb_hat = gnb.predict(X_test)
-
     # Get performance statistics
     statistics = calc_performance(y_test, gnb_hat)
-
     return statistics
 
 
@@ -129,9 +128,8 @@ def all_kmeans(X_train):
     kmeans = k_means(10, X_train, algorithm="elkan")
     print(kmeans.cluster_centers_)
 
-def svm_classifier(X_train, X_test, y_train, y_test):
-    from sklearn import svm
-    svm = svm.SVC()
+def svm_classifier(model, X_train, X_test, y_train, y_test):
+    svm = model
     svm.fit(X_train, y_train)
     y_hat = svm.predict(X_test)
     statistics = calc_performance(y_test, y_hat)
@@ -170,32 +168,62 @@ features, target = preprocessing(df)
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.5)
 
 # Decision Tree
-# print("Performing decision tree classifer:")
-# statistics = decision_tree(X_train, X_test, y_train, y_test, features)
+print("Performing decision tree classifer:")
+statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 
 # Naive Bayes
-print("Performing gaussian naive bayes classifer:")
-statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+# print("Performing gaussian naive bayes classifer:")
+# statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
 
-# probably the same because k is 2 ~> Categorical reduces to bernoulli...
-print("Performing bernoulli naive bayes classifer:")
-statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
+# # probably the same because k is 2 ~> Categorical reduces to bernoulli...
+# print("Performing bernoulli naive bayes classifer:")
+# statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 
-print("Performing categorical naive bayes classifer:")
-statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
+# print("Performing categorical naive bayes classifer:")
+# statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
 
+# best performing model in naive bayes
 print("Performing multinomial naive bayes classifer:")
 statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
 
-print("Performing complement naive bayes classifer:")
-statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
+# print("Performing complement naive bayes classifer:")
+# statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
 
+# SVM
+q = 42
+# linear seems to be the best performed, with rbf second
+print("Performing SVM SVC classifier with linear kernel:")
+statistics = svm_classifier(svm.SVC(kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
 
+# print("Performing SVM SVC classifier with polynomial kernel:")
+# statistics = svm_classifier(svm.SVC(kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
 
+# print("Performing SVM SVC classifier with sigmoid kernel:")
+# statistics = svm_classifier(svm.SVC(kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
+
+# print("Performing SVM SVC classifier with rbf kernel(default):")
+# statistics = svm_classifier(svm.SVC(kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
+
+# do not set nu > 0.44 or < 0.3. Optimal seems to be somewhere between 0.37 and 0.42, so settled on 0.4
+# best nusvc but worse than regular svc
+# print("Performing SVM NuSVC classifier with linear kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
+
+# print("Performing SVM NuSVC classifier with polynomial kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
+
+# print("Performing SVM NuSVC classifier with sigmoid kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
+
+# print("Performing SVM NuSVC classifier with rbf kernel(default):")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
+
+# idk how to quantify kmeans, maybe find the rows that were grouped together?
 # Kmeans
 # print("Performing Kmeans classifer:")
 # all_kmeans(X_train)
 
 # # MLP
-# print('Performing MLP neural network:')
-# statistics = mlp(X_train, X_test, y_train, y_test)
+print('Performing MLP neural network:')
+statistics = mlp(X_train, X_test, y_train, y_test)
+

@@ -114,29 +114,38 @@ def k_means(clusters, X_train, algorithm="lloyd") -> KMeans:
     kmeans.fit(X_train)
     return kmeans
 
-def all_kmeans():
+def all_kmeans(X_train):
     kmeans = k_means(3, X_train)
-    print(kmeans.cluster_centers)
+    print(kmeans.cluster_centers_) # shape is [3, 104]
     kmeans = k_means(5, X_train)
-    print(kmeans.cluster_centers)
+    print(kmeans.cluster_centers_) # shape is [5, 104]
     kmeans = k_means(10, X_train)
-    print(kmeans.cluster_centers)
+    print(kmeans.cluster_centers_)
     # elkan algorithm
     kmeans = k_means(3, X_train, algorithm="elkan")
-    print(kmeans.cluster_centers)
+    print(kmeans.cluster_centers_)
     kmeans = k_means(5, X_train, algorithm="elkan")
-    print(kmeans.cluster_centers)
+    print(kmeans.cluster_centers_)
     kmeans = k_means(10, X_train, algorithm="elkan")
-    print(kmeans.cluster_centers)    
+    print(kmeans.cluster_centers_)
 
 def svm_classifier(X_train, X_test, y_train, y_test):
     from sklearn import svm
     svm = svm.SVC()
     svm.fit(X_train, y_train)
     y_hat = svm.predict(X_test)
-    accuracy = accuracy_score(y_test, y_hat)
-    # print(accuracy)
-    return accuracy    
+    statistics = calc_performance(y_test, y_hat)
+    return statistics
+
+# CNN
+def mlp(X_train, X_test, y_train, y_test):
+    from sklearn.neural_network import MLPClassifier
+    # iterations dont matter here, leaving it at 400 and fuck off
+    mlp = MLPClassifier(random_state=42, max_iter=400)
+    mlp.fit(X_train, y_train)
+    y_hat = mlp.predict(X_test)
+    statistics = calc_performance(y_test, y_hat)
+    return statistics
 
 # fetch dataset 
 adult = fetch_ucirepo(id=2) 
@@ -168,11 +177,10 @@ statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 print("Performing naive bayes classifer:")
 statistics = naive_bayes(X_train, X_test, y_train, y_test)
 
-# CNN
-# from sklearn.neural_network import MLPClassifier
-# # iterations dont matter here, leaving it at 400 and fuck off
-# mlp = MLPClassifier(random_state=42, max_iter=400)
-# mlp.fit(X_train, y_train)
-# y_hat = mlp.predict(X_test)
-# accuracy = accuracy_score(y_test, y_hat)
-# print(accuracy)
+# Kmeans
+print("Performing Kmeans classifer:")
+all_kmeans(X_train)
+
+# MLP
+print('Performing MLP neural network:')
+statistics = mlp(X_train, X_test, y_train, y_test)

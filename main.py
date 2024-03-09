@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, CategoricalNB, BernoulliNB, ComplementNB, MultinomialNB
 import numpy as np
 
 # Encodes catergory classes with One Hot Encoder
@@ -96,10 +96,9 @@ def decision_tree(X_train, X_test, y_train, y_test, dummified):
 
     return statistics
 
-def naive_bayes(X_train, X_test, y_train, y_test):
+def naive_bayes(model, X_train, X_test, y_train, y_test):
     # gnb model
-    # this should probably be categorical NB
-    gnb = GaussianNB()
+    gnb = model
     gnb.fit(X_train, y_train)
     gnb_hat = gnb.predict(X_test)
 
@@ -107,6 +106,7 @@ def naive_bayes(X_train, X_test, y_train, y_test):
     statistics = calc_performance(y_test, gnb_hat)
 
     return statistics
+
 
 from sklearn.cluster import KMeans
 def k_means(clusters, X_train, algorithm="lloyd") -> KMeans:
@@ -170,17 +170,29 @@ features, target = preprocessing(df)
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.33, random_state=42)
 
 # Decision Tree
-print("Performing decision tree classifer:")
-statistics = decision_tree(X_train, X_test, y_train, y_test, features)
+# print("Performing decision tree classifer:")
+# statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 
 # Naive Bayes
-print("Performing naive bayes classifer:")
-statistics = naive_bayes(X_train, X_test, y_train, y_test)
+print("Performing gaussian naive bayes classifer:")
+statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+
+print("Performing categorical naive bayes classifer:")
+statistics = naive_bayes(CategoricalNB(), X_train, X_test, y_train, y_test)
+
+print("Performing multinomial naive bayes classifer:")
+statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
+
+print("Performing complement naive bayes classifer:")
+statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
+
+print("Performing bernoulli naive bayes classifer:")
+statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 
 # Kmeans
-print("Performing Kmeans classifer:")
-all_kmeans(X_train)
+# print("Performing Kmeans classifer:")
+# all_kmeans(X_train)
 
-# MLP
-print('Performing MLP neural network:')
-statistics = mlp(X_train, X_test, y_train, y_test)
+# # MLP
+# print('Performing MLP neural network:')
+# statistics = mlp(X_train, X_test, y_train, y_test)

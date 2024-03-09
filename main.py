@@ -177,6 +177,7 @@ X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=
 print("Performing gaussian naive bayes classifer:")
 statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
 
+# probably the same because k is 2 ~> Categorical reduces to bernoulli...
 print("Performing bernoulli naive bayes classifer:")
 statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 

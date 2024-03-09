@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, CategoricalNB, BernoulliNB, ComplementNB, MultinomialNB
 import numpy as np
 
 # Encodes catergory classes with One Hot Encoder
@@ -83,7 +83,7 @@ def calc_performance(y_test, y_hat):
 
 # Tree classifier. Returns accuracy, TP rate, FP rate, precision, recall, and F1
 def decision_tree(X_train, X_test, y_train, y_test, dummified):
-    decision_tree = DecisionTreeClassifier(random_state=42)
+    decision_tree = DecisionTreeClassifier()
     decision_tree.fit(X_train, y_train)
     # this stinks, probably needs tweaking
     tree_rules = export_text(decision_tree, feature_names=list(dummified.columns))
@@ -96,10 +96,9 @@ def decision_tree(X_train, X_test, y_train, y_test, dummified):
 
     return statistics
 
-def naive_bayes(X_train, X_test, y_train, y_test):
+def naive_bayes(model, X_train, X_test, y_train, y_test):
     # gnb model
-    # this should probably be categorical NB
-    gnb = GaussianNB()
+    gnb = model
     gnb.fit(X_train, y_train)
     gnb_hat = gnb.predict(X_test)
 
@@ -108,9 +107,10 @@ def naive_bayes(X_train, X_test, y_train, y_test):
 
     return statistics
 
+
 from sklearn.cluster import KMeans
 def k_means(clusters, X_train, algorithm="lloyd") -> KMeans:
-    kmeans = KMeans(n_clusters=clusters, random_state=42, algorithm=algorithm)
+    kmeans = KMeans(n_clusters=clusters, algorithm=algorithm)
     kmeans.fit(X_train)
     return kmeans
 
@@ -141,7 +141,7 @@ def svm_classifier(X_train, X_test, y_train, y_test):
 def mlp(X_train, X_test, y_train, y_test):
     from sklearn.neural_network import MLPClassifier
     # iterations dont matter here, leaving it at 400 and fuck off
-    mlp = MLPClassifier(random_state=42, max_iter=400)
+    mlp = MLPClassifier(max_iter=400)
     mlp.fit(X_train, y_train)
     y_hat = mlp.predict(X_test)
     statistics = calc_performance(y_test, y_hat)
@@ -167,20 +167,35 @@ features, target = preprocessing(df)
 # print("Target:\n", target)
 
 #Split training and test data
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.5)
 
 # Decision Tree
-print("Performing decision tree classifer:")
-statistics = decision_tree(X_train, X_test, y_train, y_test, features)
+# print("Performing decision tree classifer:")
+# statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 
 # Naive Bayes
-print("Performing naive bayes classifer:")
-statistics = naive_bayes(X_train, X_test, y_train, y_test)
+print("Performing gaussian naive bayes classifer:")
+statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+
+# probably the same because k is 2 ~> Categorical reduces to bernoulli...
+print("Performing bernoulli naive bayes classifer:")
+statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
+
+print("Performing categorical naive bayes classifer:")
+statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
+
+print("Performing multinomial naive bayes classifer:")
+statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
+
+print("Performing complement naive bayes classifer:")
+statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
+
+
 
 # Kmeans
-print("Performing Kmeans classifer:")
-all_kmeans(X_train)
+# print("Performing Kmeans classifer:")
+# all_kmeans(X_train)
 
-# MLP
-print('Performing MLP neural network:')
-statistics = mlp(X_train, X_test, y_train, y_test)
+# # MLP
+# print('Performing MLP neural network:')
+# statistics = mlp(X_train, X_test, y_train, y_test)

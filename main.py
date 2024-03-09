@@ -5,6 +5,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, f1_score, r2_score
 from sklearn.naive_bayes import GaussianNB, CategoricalNB, BernoulliNB, ComplementNB, MultinomialNB
+from sklearn.cluster import KMeans
 from sklearn import svm
 import numpy as np
 
@@ -107,7 +108,6 @@ def naive_bayes(model, X_train, X_test, y_train, y_test):
     return statistics
 
 
-from sklearn.cluster import KMeans
 def k_means(clusters, X_train, algorithm="lloyd") -> KMeans:
     kmeans = KMeans(n_clusters=clusters, algorithm=algorithm)
     kmeans.fit(X_train)

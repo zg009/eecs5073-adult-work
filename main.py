@@ -145,7 +145,7 @@ def mlp(X_train, X_test, y_train, y_test):
     # y_hat = mlp.predict(X_test)
     # statistics = calc_performance(y_test, y_hat)
 
-    print("activation identity + solver: adam + learning rate: constant")
+    print("activation identity + solver: adam + learning rate: invscaling")
     mlp = MLPClassifier(max_iter=400, activation='identity', learning_rate='invscaling', hidden_layer_sizes=(200,))
     mlp.fit(X_train, y_train)
     y_hat = mlp.predict(X_test)

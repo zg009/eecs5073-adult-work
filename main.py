@@ -138,11 +138,30 @@ def svm_classifier(model, X_train, X_test, y_train, y_test):
 # CNN
 def mlp(X_train, X_test, y_train, y_test):
     from sklearn.neural_network import MLPClassifier
-    # iterations dont matter here, leaving it at 400 and fuck off
-    mlp = MLPClassifier(max_iter=400)
+
+    # print("relu")
+    # mlp = MLPClassifier(max_iter=400)
+    # mlp.fit(X_train, y_train)
+    # y_hat = mlp.predict(X_test)
+    # statistics = calc_performance(y_test, y_hat)
+
+    print("activation identity + solver: adam + learning rate: constant")
+    mlp = MLPClassifier(max_iter=400, activation='identity', learning_rate='invscaling', hidden_layer_sizes=(200,))
     mlp.fit(X_train, y_train)
     y_hat = mlp.predict(X_test)
     statistics = calc_performance(y_test, y_hat)
+
+    # print("tanh")
+    # mlp = MLPClassifier(max_iter=400, activation='tanh')
+    # mlp.fit(X_train, y_train)
+    # y_hat = mlp.predict(X_test)
+    # statistics = calc_performance(y_test, y_hat)
+
+    # print("relu")
+    # mlp = MLPClassifier(max_iter=400, activation='relu')
+    # mlp.fit(X_train, y_train)
+    # y_hat = mlp.predict(X_test)
+    # statistics = calc_performance(y_test, y_hat)
     return statistics
 
 # fetch dataset 

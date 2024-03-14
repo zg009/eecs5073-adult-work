@@ -91,7 +91,7 @@ def decision_tree(X_train, X_test, y_train, y_test, dummified):
     decision_tree.fit(X_train, y_train)
     # this stinks, probably needs tweaking
     tree_rules = export_text(decision_tree, feature_names=list(dummified.columns))
-    # print(tree_rules)
+    print(tree_rules)
     # predicted y
     y_hat = decision_tree.predict(X_test)   
 
@@ -176,93 +176,93 @@ print("Performing decision tree classifer:")
 statistics = decision_tree(X_train, X_test, y_train, y_test, features)
 
 # Naive Bayes
-print("Performing gaussian naive bayes classifer:")
-statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
+# print("Performing gaussian naive bayes classifer:")
+# statistics = naive_bayes(GaussianNB(), X_train, X_test, y_train, y_test)
 
-# # probably the same because k is 2 ~> Categorical reduces to bernoulli...
-print("Performing bernoulli naive bayes classifer:")
-statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
+# # # probably the same because k is 2 ~> Categorical reduces to bernoulli...
+# print("Performing bernoulli naive bayes classifer:")
+# statistics = naive_bayes(BernoulliNB(), X_train, X_test, y_train, y_test)
 
-print("Performing categorical naive bayes classifer:")
-statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
+# print("Performing categorical naive bayes classifer:")
+# statistics = naive_bayes(CategoricalNB(min_categories=features.nunique()), X_train, X_test, y_train, y_test)
 
-# best performing model in naive bayes
-print("Performing multinomial naive bayes classifer:")
-statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
+# # best performing model in naive bayes
+# print("Performing multinomial naive bayes classifer:")
+# statistics = naive_bayes(MultinomialNB(), X_train, X_test, y_train, y_test)
 
-print("Performing complement naive bayes classifer:")
-statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
+# print("Performing complement naive bayes classifer:")
+# statistics = naive_bayes(ComplementNB(), X_train, X_test, y_train, y_test)
 
-# SVM
-q = 42
-# linear seems to be the best performed, with rbf second
-print("Performing SVM SVC classifier with linear kernel:")
-statistics = svm_classifier(svm.SVC(kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
+# # SVM
+# q = 42
+# # linear seems to be the best performed, with rbf second
+# print("Performing SVM SVC classifier with linear kernel:")
+# statistics = svm_classifier(svm.SVC(kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM SVC classifier with polynomial kernel:")
-statistics = svm_classifier(svm.SVC(kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM SVC classifier with polynomial kernel:")
+# statistics = svm_classifier(svm.SVC(kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM SVC classifier with sigmoid kernel:")
-statistics = svm_classifier(svm.SVC(kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM SVC classifier with sigmoid kernel:")
+# statistics = svm_classifier(svm.SVC(kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM SVC classifier with rbf kernel(default):")
-statistics = svm_classifier(svm.SVC(kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM SVC classifier with rbf kernel(default):")
+# statistics = svm_classifier(svm.SVC(kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
 
-# do not set nu > 0.44 or < 0.3. Optimal seems to be somewhere between 0.37 and 0.42, so settled on 0.4
-# best nusvc but worse than regular svc
-print("Performing SVM NuSVC classifier with linear kernel:")
-statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
+# # do not set nu > 0.44 or < 0.3. Optimal seems to be somewhere between 0.37 and 0.42, so settled on 0.4
+# # best nusvc but worse than regular svc
+# print("Performing SVM NuSVC classifier with linear kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='linear', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM NuSVC classifier with polynomial kernel:")
-statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM NuSVC classifier with polynomial kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='poly', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM NuSVC classifier with sigmoid kernel:")
-statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM NuSVC classifier with sigmoid kernel:")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='sigmoid', random_state=q), X_train, X_test, y_train, y_test)
 
-print("Performing SVM NuSVC classifier with rbf kernel(default):")
-statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
+# print("Performing SVM NuSVC classifier with rbf kernel(default):")
+# statistics = svm_classifier(svm.NuSVC(nu=0.4, kernel='rbf', random_state=q), X_train, X_test, y_train, y_test)
 
-# idk how to quantify kmeans, maybe find the rows that were grouped together?
-# Kmeans
-print("Performing Kmeans classifer:")
-all_kmeans(X_train)
+# # idk how to quantify kmeans, maybe find the rows that were grouped together?
+# # Kmeans
+# print("Performing Kmeans classifer:")
+# all_kmeans(X_train)
 
-# # MLP
-print('Performing MLP neural network:')
-# model = MLPClassifier(activation='identity', solver='adam')
+# # # MLP
+# print('Performing MLP neural network:')
+# # model = MLPClassifier(activation='identity', solver='adam')
+# # mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-relu solver-adam iter-600:')
+# model = MLPClassifier(activation='relu', solver='adam', max_iter=600)
 # mlp(model, X_train, X_test, y_train, y_test)
-print('activation-relu solver-adam iter-600:')
-model = MLPClassifier(activation='relu', solver='adam', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-tanh solver-adam iter-600:')
-model = MLPClassifier(activation='tanh', solver='adam', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-logistic solver-adam iter-600:')
-model = MLPClassifier(activation='logistic', solver='adam', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-
-# model = MLPClassifier(activation='identity', solver='lbfgs')
+# print('activation-tanh solver-adam iter-600:')
+# model = MLPClassifier(activation='tanh', solver='adam', max_iter=600)
 # mlp(model, X_train, X_test, y_train, y_test)
-print('activation-relu solver-lbfgs iter-600:')
-model = MLPClassifier(activation='relu', solver='lbfgs', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-tanh solver-lbfgs iter-600:')
-model = MLPClassifier(activation='tanh', solver='lbfgs', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-logistic solver-lbfgs iter-600:')
-model = MLPClassifier(activation='logistic', solver='lbfgs', max_iter=600)
-mlp(model, X_train, X_test, y_train, y_test)
-
-# model = MLPClassifier(activation='identity', solver='sgd')
+# print('activation-logistic solver-adam iter-600:')
+# model = MLPClassifier(activation='logistic', solver='adam', max_iter=600)
 # mlp(model, X_train, X_test, y_train, y_test)
-print('activation-relu solver-sgd iter-600 adaptive learning:')
-model = MLPClassifier(activation='relu', solver='sgd', max_iter=600, learning_rate='adaptive')
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-tanh solver-sgd iter-600 adaptive learning:')
-model = MLPClassifier(activation='tanh', solver='sgd', max_iter=600, learning_rate='adaptive')
-mlp(model, X_train, X_test, y_train, y_test)
-print('activation-logistic solver-sgd iter-600 adaptive learning:')
-model = MLPClassifier(activation='logistic', solver='sgd', max_iter=5600, learning_rate='adaptive')
-mlp(model, X_train, X_test, y_train, y_test)
+
+# # model = MLPClassifier(activation='identity', solver='lbfgs')
+# # mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-relu solver-lbfgs iter-600:')
+# model = MLPClassifier(activation='relu', solver='lbfgs', max_iter=600)
+# mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-tanh solver-lbfgs iter-600:')
+# model = MLPClassifier(activation='tanh', solver='lbfgs', max_iter=600)
+# mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-logistic solver-lbfgs iter-600:')
+# model = MLPClassifier(activation='logistic', solver='lbfgs', max_iter=600)
+# mlp(model, X_train, X_test, y_train, y_test)
+
+# # model = MLPClassifier(activation='identity', solver='sgd')
+# # mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-relu solver-sgd iter-600 adaptive learning:')
+# model = MLPClassifier(activation='relu', solver='sgd', max_iter=600, learning_rate='adaptive')
+# mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-tanh solver-sgd iter-600 adaptive learning:')
+# model = MLPClassifier(activation='tanh', solver='sgd', max_iter=600, learning_rate='adaptive')
+# mlp(model, X_train, X_test, y_train, y_test)
+# print('activation-logistic solver-sgd iter-600 adaptive learning:')
+# model = MLPClassifier(activation='logistic', solver='sgd', max_iter=5600, learning_rate='adaptive')
+# mlp(model, X_train, X_test, y_train, y_test)
 
 

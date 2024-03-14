@@ -19,4 +19,5 @@ adult.data contains
 ## Results
 
 output.txt        contains all output using python main.py > output.txt
+
 decision_tree.txt contains dendrogram of decision tree classifier
